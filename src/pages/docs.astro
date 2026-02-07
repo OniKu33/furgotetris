@@ -1,0 +1,29 @@
+---
+import Layout from "../layouts/Layout.astro";
+import DocsManager from "../components/DocsManager.jsx";
+import { supabase } from "../lib/supabase";
+
+// 1. SEGURIDAD: Comprobar si hay cookie (si no, al login)
+const roleCookie = Astro.cookies.get("furgorole");
+if (!roleCookie) {
+  return Astro.redirect("/login");
+}
+
+// 2. SABER SI ES JEFE
+const isChunin = roleCookie.value === "chunin";
+
+// 3. CARGAR DATOS (Server Side)
+// Traemos los docs ordenados por fecha (el más nuevo arriba)
+const { data: docs } = await supabase
+  .from("documentos")
+  .select("*")
+  .order("created_at", { ascending: false });
+---
+
+<Layout title="Documentación">
+  <div class="pt-6">
+    <h1 class="text-2xl font-bold px-4 mb-6">🗂️ Hojas de Ruta</h1>
+
+    <DocsManager client:load initialDocs={docs} isChunin={isChunin} />
+  </div>
+</Layout>
