@@ -21,7 +21,7 @@ export async function onRequest({ cookies, request, redirect }, next) {
   // 3. SEGURIDAD DE RANGOS (Protección de rutas)
 
   // Rutas que SOLO los CHUNIN pueden tocar
-  const rutasChunin = ["/inventario", "/plan", "/admin"];
+  const rutasChunin = ["/inventario", "/manifiesto", "/admin"];
 
   // Si un GENIN intenta entrar en zona CHUNIN -> A CASA
   if (rutasChunin.some(ruta => url.pathname.startsWith(ruta))) {

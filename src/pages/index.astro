@@ -1,15 +1,4 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import LiveLoader from "../components/LiveLoader.jsx";
-import { supabase } from "../lib/supabase";
-
-// Pedimos los packs directamente. Sin eventos.
-let { data: packs } = await supabase
-    .from("packs")
-    .select("*")
-    .order("nombre", { ascending: true });
+// Redirección inmediata a la sección más útil: Docs
+return Astro.redirect("/docs");
 ---
-
-<Layout title="Control Directo">
-    <LiveLoader client:load initialPacks={packs} />
-</Layout>

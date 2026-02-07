@@ -1,24 +1,22 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-// LÓGICA DE SERVIDOR (Importante: Sin esto el botón no hace nada)
+// LÓGICA DE SERVIDOR (Igual que antes)
 if (Astro.request.method === "POST") {
   try {
     const data = await Astro.request.formData();
     const password = data.get("password");
 
-    // Leemos las claves del archivo .dev.vars
     const passGenin = import.meta.env.PASS_GENIN;
     const passChunin = import.meta.env.PASS_CHUNIN;
 
     let role = null;
 
-    // Comprobamos la contraseña
-    if (password === passChunin) role = "chunin";
-    else if (password === passGenin) role = "genin";
+    // Comprobamos la contraseña (añado .trim() por si el corrector del móvil mete espacios)
+    if (password === passChunin?.trim()) role = "chunin";
+    else if (password === passGenin?.trim()) role = "genin";
 
     if (role) {
-      // Creamos la cookie
       Astro.cookies.set("furgorole", role, {
         path: "/",
         maxAge: 31536000, // 1 año
@@ -36,26 +34,28 @@ if (Astro.request.method === "POST") {
 }
 ---
 
-<Layout title="Acceso al Dojo">
+<Layout title="Acceso">
   <div
     class="fixed inset-0 z-50 flex flex-col items-center justify-center p-6 text-center bg-slate-950 w-full h-full"
   >
-    <div class="mb-8 animate-bounce">
-      <span class="text-6xl">🥋</span>
+    <div class="mb-6 animate-bounce">
+      <span class="text-7xl filter drop-shadow-lg">🐈‍</span>
     </div>
-    <h1 class="text-3xl font-bold mb-2 text-white">
-      FURGO<span class="text-yellow-500">TETRIS</span>
+
+    <h1 class="text-3xl font-black mb-2 text-white tracking-widest uppercase">
+      AGARRU<span class="text-yellow-500">MBERRU</span>
     </h1>
-    <p class="text-slate-400 text-sm mb-8">Identifícate, Shinobi.</p>
+
+    <p class="text-slate-400 text-sm mb-8 font-mono">Pon la palabra mágica</p>
 
     <form method="POST" class="w-full max-w-xs space-y-4">
       <input
         type="password"
         name="password"
-        placeholder="Palabra Clave..."
+        placeholder="✨ . . . . . ✨"
         required
         autocomplete="off"
-        class="w-full bg-slate-900 border border-slate-700 focus:border-yellow-500 rounded-xl p-4 text-white text-center text-lg tracking-widest outline-none shadow-inner transition-all"
+        class="w-full bg-slate-900 border border-slate-700 focus:border-yellow-500 rounded-xl p-4 text-white text-center text-lg tracking-widest outline-none shadow-inner transition-all placeholder:text-slate-600"
       />
       <button
         class="w-full bg-gradient-to-r from-yellow-600 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 text-slate-900 font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-transform text-lg uppercase tracking-wider"
@@ -63,6 +63,5 @@ if (Astro.request.method === "POST") {
         ENTRAR
       </button>
     </form>
-    <p class="mt-8 text-xs text-slate-600">Sistema Cloudflare Edge</p>
   </div>
 </Layout>
