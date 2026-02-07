@@ -1,0 +1,58 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ActiveLoader from "../components/ActiveLoader.jsx";
+import { supabase } from "../lib/supabase";
+
+// 1. Buscar cuál es el manifiesto ACTIVO
+let { data: activeManifest } = await supabase
+  .from("manifiestos")
+  .select("id, nombre")
+  .eq("activo", true)
+  .single(); // Devuelve un solo objeto
+
+// 2. Buscar los packs que pertenecen a ese manifiesto
+let activePacks = [];
+
+if (activeManifest) {
+  const { data } = await supabase
+    .from("manifiesto_packs")
+    .select(
+      `
+      pack_id,
+      packs ( * )
+    `,
+    )
+    .eq("manifiesto_id", activeManifest.id);
+
+  // Limpiamos la respuesta para tener un array limpio de packs
+  if (data) {
+    activePacks = data.map((row) => row.packs);
+  }
+}
+---
+
+<Layout title="Carga Activa">
+  <div class="h-screen w-full">
+    {
+      activeManifest && activePacks.length > 0 ? (
+        <ActiveLoader
+          client:load
+          activePacks={activePacks}
+          manifestName={activeManifest.nombre}
+        />
+      ) : (
+        <div class="flex flex-col items-center justify-center h-full text-slate-500 p-6 text-center">
+          <span class="text-6xl mb-4">😴</span>
+          <h2 class="text-xl font-bold text-white mb-2">No hay plan activo</h2>
+          <p class="mb-6">Ve a la sección PLAN y activa una lista de carga.</p>
+          <a
+            href="/manifiesto"
+            class="bg-yellow-500 text-slate-900 px-6 py-3 rounded-xl font-bold shadow-lg"
+          >
+            Ir a Planificar
+          </a>
+        </div>
+      )
+    }
+  </div>
+</Layout>

@@ -1,0 +1,31 @@
+---
+import Layout from "../layouts/Layout.astro";
+import InventarioManager from "../components/InventarioManager.jsx";
+import { supabase } from "../lib/supabase";
+
+// 1. Carga inicial de datos desde el Servidor (SSR)
+// Pedimos packs y ordenamos por fecha (el más nuevo arriba)
+let { data: packs } = await supabase
+  .from("packs")
+  .select("*")
+  .order("created_at", { ascending: false });
+
+// Pedimos items
+let { data: items } = await supabase
+  .from("items")
+  .select("*")
+  .order("created_at", { ascending: false });
+---
+
+<Layout title="Gestión de Inventario">
+  <div class="p-4">
+    <header class="mb-6">
+      <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+        🛠️ Inventario
+      </h1>
+      <p class="text-slate-400 text-sm">Gestiona tus activos y contenedores</p>
+    </header>
+
+    <InventarioManager client:load initialPacks={packs} initialItems={items} />
+  </div>
+</Layout>

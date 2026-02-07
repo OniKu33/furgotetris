@@ -1,0 +1,24 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ManifiestoManager from "../components/ManifiestoManager.jsx";
+import { supabase } from "../lib/supabase";
+
+// 1. Cargar manifiestos (ordenados por fecha)
+let { data: manifiestos } = await supabase
+  .from("manifiestos")
+  .select("*")
+  .order("created_at", { ascending: false });
+
+// 2. Cargar TODOS los packs (para el selector)
+let { data: packs } = await supabase.from("packs").select("*").order("nombre");
+---
+
+<Layout title="Planificador">
+  <div class="p-2">
+    <ManifiestoManager
+      client:load
+      initialManifiestos={manifiestos}
+      allPacks={packs}
+    />
+  </div>
+</Layout>
