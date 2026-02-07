@@ -1,18 +1,24 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-// LÓGICA DE SERVIDOR (Igual que antes)
+// LÓGICA DE SERVIDOR
 if (Astro.request.method === "POST") {
   try {
     const data = await Astro.request.formData();
     const password = data.get("password");
 
-    const passGenin = import.meta.env.PASS_GENIN;
-    const passChunin = import.meta.env.PASS_CHUNIN;
+    // --- CORRECCIÓN PARA CLOUDFLARE ---
+    // 1. Accedemos al entorno de ejecución (donde Cloudflare guarda los secretos)
+    const runtime = Astro.locals.runtime;
+    const env = runtime?.env || {};
+
+    // 2. Buscamos la contraseña primero en Cloudflare, y si no está, en tu PC (.env)
+    const passGenin = env.PASS_GENIN || import.meta.env.PASS_GENIN;
+    const passChunin = env.PASS_CHUNIN || import.meta.env.PASS_CHUNIN;
 
     let role = null;
 
-    // Comprobamos la contraseña (añado .trim() por si el corrector del móvil mete espacios)
+    // Comprobamos la contraseña (con .trim() para seguridad)
     if (password === passChunin?.trim()) role = "chunin";
     else if (password === passGenin?.trim()) role = "genin";
 
@@ -39,7 +45,7 @@ if (Astro.request.method === "POST") {
     class="fixed inset-0 z-50 flex flex-col items-center justify-center p-6 text-center bg-slate-950 w-full h-full"
   >
     <div class="mb-6 animate-bounce">
-      <span class="text-7xl filter drop-shadow-lg">🐈‍</span>
+      <span class="text-7xl filter drop-shadow-lg">🐈‍⬛</span>
     </div>
 
     <h1 class="text-3xl font-black mb-2 text-white tracking-widest uppercase">
