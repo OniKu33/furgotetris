@@ -34,9 +34,27 @@ const getLinkClass = (path) => {
 			name="viewport"
 			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
 		/>
-		<title>{title} | FurgoTetris</title>
+		<link rel="manifest" href="/manifest.json" />
+
+		<ViewTransitions />
+
+		<title>{title} | Agarrumberru</title>
+
+		<meta
+			name="description"
+			content="Gestión de gira y carga de furgo. Tetris en tiempo real."
+		/>
+		<meta property="og:title" content="Agarrumberru - Gestión de Gira" />
+		<meta
+			property="og:description"
+			content="Hojas de ruta, inventario y carga de camión en tiempo real."
+		/>
+		<meta property="og:type" content="website" />
+		<meta property="og:image" content="https://emojicdn.elk.sh/🐈‍" />
+		<meta name="theme-color" content="#0f172a" />
 		<ViewTransitions />
 	</head>
+
 	<body
 		class="bg-slate-900 text-white min-h-screen font-sans overflow-x-hidden pb-32 selection:bg-yellow-500 selection:text-black"
 	>
